@@ -1,10 +1,10 @@
 %=================================================================
 % Signed Graph Metric Learing (SGML) via Gershgorin Disc Alignment
-% **SGML with GLR binary classification
+% **SGML with GLR objective value and running time experiments
 %
 % author: Cheng Yang
 % email me any questions: cheng.yang@ieee.org
-% date: June 18th, 2020
+% date: June 19th, 2020
 % please kindly cite the paper:
 % ['Signed Graph Metric Learning via Gershgorin Disc Alignment',
 % Cheng Yang, Gene Cheung, Wei Hu,
@@ -36,6 +36,11 @@ disp('16. Madelon; 500 features.');
 disp('17. Colon-cancer; 2000 features.');
 dataset_i = eval(input('please enter number 1-17 (# of the above datasets) to run: ', 's'));
 
+disp('1. PD-cone.');
+disp('2. HBNB.');
+disp('3. SGML.');
+optimizationer = eval(input('please enter number 1-3 (# of the above optimization framework) to run: ', 's'));
+
 if dataset_i==1
     read_data = importdata('australian.csv');   
 elseif dataset_i==2
@@ -66,52 +71,47 @@ elseif dataset_i==14
     read_data = importdata('WDBC.csv');
 end
 
-disp('1. 3-NN classifier.');
-disp('2. Mahalanobis classifier.');
-disp('3. GLR-based classifier.');
-classifier_i = eval(input('please kindly choose 1 out of the above 3 classifiers to run:', 's'));
-
-obj_i=0;
-number_of_runs=10;
-accuracy_temp=zeros(number_of_runs,1);
-
 feature = read_data(:,1:end-1); % data features
 feature(isnan(feature))=0;
+rng(0);
+feature = feature + 1e-12*randn(size(feature)); % to avoid NaN during normalization
+
 label = read_data(:,end); % data labels
 
-K=5; % for classification 60% training 40% test
+K=round(length(label)/4); % test 4 samples at a time
+run_n=K;
     
-for rngi = 0:9
+obj_temp=zeros(run_n,1);
+time_temp=zeros(run_n,1);
+
+rng(0); % for re-producibility
+indices = crossvalind('Kfold',label,K); % K-fold cross-validation
+
+obj_i=1;
+
+profile on
+
+for fold_i = 1:run_n
+    disp(['fold ' num2str(fold_i) ' of ' num2str(K)]);
+    train = (indices == fold_i); % these are indices for training data
+    test=~train;
+    
+    % binary classification
+    [obj_vec,time_vec] = ...
+        binary_classification( ...
+        feature, ...
+        label, ...
+        train, ...
+        test, ...
+        1, ...
+        -1, ...
+        optimizationer);
+    obj_temp(obj_i)=obj_vec;
+    time_temp(obj_i)=time_vec;
     obj_i=obj_i+1;
-    disp(['=====current random seed===== ' num2str(rngi)]);
-    
-    rng(rngi); % for re-producibility
-    indices = crossvalind('Kfold',label,K); % K-fold cross-validation
-    
-    for fold_i = 1:1
-        for fold_j = 2:2
-            if fold_i<fold_j
-                disp('==========================================================================');
-                disp(['classifier ' num2str(obj_i) '; folds ' num2str(fold_i) ' and ' num2str(fold_j)]);
-                test = (indices == fold_i | indices == fold_j); % these are indices for test data
-                
-                train = ~test; % the remaining indices are for training data
-       
-                % binary classification
-                [error_classifier] = ...
-                    binary_classification( ...
-                    feature, ...
-                    label, ...
-                    train, ...
-                    test, ...
-                    1, ...
-                    -1, ...
-                    classifier_i);
-                
-                accuracy_temp(obj_i)=1-error_classifier;
-                disp(['classifier ' num2str(obj_i) ' accuracy: ' num2str(accuracy_temp(obj_i)*100)]);
-            end
-        end
-    end 
 end
-disp(['acc: ' num2str(mean(accuracy_temp)*100,'%.2f') char(177) num2str(std(accuracy_temp)*100,'%.2f')]);
+
+disp(['mean obj: ' num2str(mean(obj_temp)) ' mean time: ' num2str(mean(time_temp))]);
+
+profile off
+profile viewer
