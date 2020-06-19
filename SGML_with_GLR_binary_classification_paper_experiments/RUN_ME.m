@@ -36,11 +36,8 @@ disp('16. Madelon; 500 features.');
 disp('17. Colon-cancer; 2000 features.');
 dataset_i = eval(input('please enter number 1-17 (# of the above datasets) to run: ', 's'));
 
-noc=2; % number of classes
-
 if dataset_i==1
-    read_data = importdata('australian.csv');
-    
+    read_data = importdata('australian.csv');   
 elseif dataset_i==2
     read_data = importdata('breast-cancer.csv'); 
 elseif dataset_i==3
@@ -95,16 +92,6 @@ for rngi = 0:9
     
     indices = crossvalind('Kfold',label,K); % K-fold cross-validation
     
-    %% ===PARAMETER SETTINGS===
-    
-    S_upper = size(feature,2); % C constant
-    
-    rho = 1e-5; % constant for PD property of M
-           
-    %% ========================
-        
-    %% ==========================
-    
     for fold_i = 1:1
         for fold_j = 2:2
             if fold_i<fold_j
@@ -115,28 +102,21 @@ for rngi = 0:9
                 train = ~test; % the remaining indices are for training data
        
                 % binary classification
-                [ obj_vec,time_vec,error_classifier] = ...
-                    optimization_M_one_against_one_binary_R_Block_CD( ...
+                [error_classifier] = ...
+                    binary_classification( ...
                     feature, ...
                     label, ...
                     train, ...
                     test, ...
                     1, ...
                     -1, ...
-                    S_upper,...
-                    rho,...
                     classifier_i);
                 
-                obj_temp(obj_i)=obj_vec;
-                time_temp(obj_i)=time_vec;
                 accuracy_temp(obj_i)=1-error_classifier;
                 disp(['classifier ' num2str(obj_i) ' accuracy: ' num2str(accuracy_temp(obj_i)*100)]);
-                
             end
         end
-    end
-    
+    end 
     
 end
-disp(['acc: ' num2str(mean(accuracy_temp)*100,'%.2f') char(177) num2str(std(accuracy_temp)*100,'%.2f') ...
-    ' mean obj: ' num2str(mean(obj_temp)) ' mean time: ' num2str(mean(time_temp))]);
+disp(['acc: ' num2str(mean(accuracy_temp)*100,'%.2f') char(177) num2str(std(accuracy_temp)*100,'%.2f')]);
