@@ -1,5 +1,13 @@
 # Signed_Graph_Metric_Learning
- source code for running experiments in paper https://arxiv.org/pdf/2006.08816v2.pdf\
+ source code for running experiments in paper：\
+ @misc{yang2020signed,
+    title={Signed Graph Metric Learning via Gershgorin Disc Alignment},
+    author={Cheng Yang and Gene Cheung and Wei Hu},
+    year={2020},
+    eprint={2006.08816},
+    archivePrefix={arXiv},
+    primaryClass={cs.LG}
+}
 1. run 'RUN_ME.m' for immediate experimental results.
 2. you might consider using Gurobi Matlab interface instead of Matlab linprog for fast experiments:\
    s_k = linprog(net_gc,...\
@@ -16,4 +24,4 @@
     % LP_A,LP_b,...\
     % LP_Aeq,LP_beq,...\
     % LP_lb,LP_ub,options);
-3. email me cheng.yang@ieee.org for any questions.
+3. email me cheng DOT yang AT ieee DOT org for any questions.
