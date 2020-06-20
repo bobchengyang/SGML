@@ -8,7 +8,7 @@
         LP_lb,LP_ub,options);\
     %% ===Gurobi Matlab interface might be faster than Matlab linprog======\
     % you need to apply an Academic License (free) in order to use Gurobi Matlab\
-    % interface: https://www.gurobi.com/downloads/end-user-license-agreement-academic/\
+    % interface: https://www.gurobi.com/downloads/end-user-license-agreement-academic/ \
     % once you have an Academic License and have Gurobi Ooptimizer\
     % installed, you should be able to run the following code by\
     % uncommenting them in the source code (see below, for example).\
