@@ -1,6 +1,6 @@
 %=================================================================
 % Signed Graph Metric Learing (SGML) via Gershgorin Disc Alignment
-% **SGML with LMNN objective value and running time experiments
+% **SGML with MCML objective value and running time experiments
 %
 % author: Cheng Yang
 % email me any questions: cheng.yang@ieee.org
