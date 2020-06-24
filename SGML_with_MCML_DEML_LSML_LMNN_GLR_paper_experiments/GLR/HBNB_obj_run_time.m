@@ -71,10 +71,10 @@ else
         flag=1;
         rng(lobpcg_random_control);
         [mce,~] = ...
-            optimization_M_lobpcg(randn(n_feature-1,1),M22,1e-4,200);
+            lobpcg_fv(randn(n_feature-1,1),M22,1e-4,200);
     else
         [mce,~] = ...
-            optimization_M_lobpcg(mce,M22,1e-4,200);
+            lobpcg_fv(mce,M22,1e-4,200);
     end
     M22_min_eig=mce'*M22*mce;
 end
