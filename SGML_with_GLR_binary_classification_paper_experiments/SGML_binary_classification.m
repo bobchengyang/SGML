@@ -6,7 +6,7 @@ function [error_classifier] = ...
     classifier_i)
 
 %% check error rate before metric learning starts
-[~, n_feature]= size(feature_train_test); %get the number of samples and the number of features
+[n_sample, n_feature]= size(feature_train_test); %get the number of samples and the number of features
 
 M = eye(n_feature);
 
