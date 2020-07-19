@@ -6,7 +6,7 @@ function [error_classifier] = ...
     classifier_i)
 
 %% check error rate before metric learning starts
-[n_sample, n_feature]= size(feature_train_test); %get the number of samples and the number of features
+[n_sample_full, n_feature]= size(feature_train_test); %get the number of samples and the number of features
 
 M = eye(n_feature);
 
@@ -36,7 +36,7 @@ x_valid(~initial_label_index)=z;
 else % GLR-based classifier
 %=======Graph classifier starts=======
 cvx_begin
-variable x(n_sample,1);
+variable x(n_sample_full,1);
 minimize(x'*L*x)
 subject to
 x(initial_label_index) == class_train_test(initial_label_index);
@@ -162,7 +162,7 @@ x_valid(~initial_label_index)=z;
 else % GLR-based classifier
 %=======Graph classifier starts=======
 cvx_begin
-variable x(n_sample,1);
+variable x(n_sample_full,1);
 minimize(x'*L*x)
 subject to
 x(initial_label_index) == class_train_test(initial_label_index);
