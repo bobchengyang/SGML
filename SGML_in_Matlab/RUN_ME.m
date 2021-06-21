@@ -38,6 +38,7 @@ data_feature=eval(['data' user_entry '_feature']);
 data_label=eval(['data' user_entry '_label']);
 
 [n_sample,n_feature]=size(data_feature); % number of samples, number of features
+data_cov=cov(data_feature);
 
 %% set parameters
 %=main parameters for SGML=================================================
@@ -72,6 +73,14 @@ bins=ones(1,n_feature); % the number of the unique numbers of bins represents th
 
 %=Initialize M=============================================================
 M0=initial_M(n_feature,2); % initial M as a [1-dense matrix] or [2-sparse matrix]
+
+% [M0,league_vec] = determine_initial_M_appropriate_colors(data_cov,...
+%     n_feature,...
+%     [],...
+%     [],...
+%     [],...
+%     2);
+
 rng(lobpcg_random_control);
 [fv1,~] = ...
     lobpcg_fv(randn(n_feature,1),M0,1e-12,200); % compute the first eigenvector for the first time using LOBPCG
